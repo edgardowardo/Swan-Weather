@@ -21,9 +21,51 @@ class SwanWeatherTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testCityViewModel() {
+        
+        let id = 2643743 // London town!
+        let e = expectationWithDescription("Expect return data from server")
+        let vm = CityViewModel(cityid: id)
+        XCTAssertEqual(vm.city, "")
+        XCTAssertEqual(vm.clouds, "")
+        XCTAssertEqual(vm.cloudsIcon, "")
+        XCTAssertEqual(vm.temperature, "")
+        XCTAssertEqual(vm.temperatureMin, "")
+        
+        // Clean it first
+        try! vm.realm.write({
+            for existing in vm.realm.objects(City).filter("id == \(id)") {
+                vm.realm.delete(existing)
+            }
+        })
+        
+        XCTAssertEqual(vm.realm.objects(City).filter("id == \(id)").count, 0)
+        
+        vm.refreshCity {
+            XCTAssertEqual(vm.city, "London")
+            XCTAssertGreaterThan(vm.clouds.characters.count, 0)
+            XCTAssertGreaterThan(vm.cloudsIcon.characters.count, 0)
+            XCTAssertGreaterThan(vm.temperature.characters.count, 0)
+            XCTAssertGreaterThan(vm.temperatureMin.characters.count, 0)
+            
+            XCTAssertEqual(vm.realm.objects(City).filter("id == \(id)").count, 1)
+            
+            // Another call to refresh without the call back means it was retrieved from the local datastore!
+            vm.refreshCity()
+            XCTAssertEqual(vm.city, "London")
+            XCTAssertGreaterThan(vm.clouds.characters.count, 0)
+            XCTAssertGreaterThan(vm.cloudsIcon.characters.count, 0)
+            XCTAssertGreaterThan(vm.temperature.characters.count, 0)
+            XCTAssertGreaterThan(vm.temperatureMin.characters.count, 0)
+            
+            e.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(60) { error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
     }
     
     func testPerformanceExample() {
@@ -33,4 +75,15 @@ class SwanWeatherTests: XCTestCase {
         }
     }
     
+}
+
+func backgroundThread(delay: Double = 0.0, background: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+        if(background != nil){ background!(); }
+        
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
+        dispatch_after(popTime, dispatch_get_main_queue()) {
+            if(completion != nil){ completion!(); }
+        }
+    }
 }

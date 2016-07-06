@@ -40,7 +40,7 @@ class CityViewController: UIViewController {
             if let t = self.labelTemperatureMin {
                 t.text = vm.temperatureMin
             }
-            if let t = self.imageCloudy {
+            if let t = self.imageCloudy where vm.cloudsIcon.characters.count > 0 {
                 t.image = UIImage(named: vm.cloudsIcon)
             }
         }

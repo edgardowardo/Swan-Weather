@@ -19,17 +19,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-SwanWeatherTests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Realm.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>RealmSwift.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RxAlamofire.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -42,7 +42,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>7522C10627477C351B78A8A64BB21937</key>
+		<key>1DAAA917D44EDED60F7F80AE9C548F48</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2BCCA1067F3111256A9FF862D7F9F68F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>31F092531C63829B98F849681DC5D808</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,27 +62,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A9912DD6EB51FCB5A0A02B96ECA4987E</key>
+		<key>B98817797F503313CB52E7D5C5D6B086</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B9D3D54193DB6388CEE35FF5C2165D72</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DD7187D6067A29F6704E6258125EFAEF</key>
+		<key>BF61D1B0F9B406A541396C864565E219</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>E61CE3B6DFA1FE6B3E296965C76C0E10</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F3F828C2503DBFAF9F0CF676D3E1B203</key>
 		<dict>
 			<key>primary</key>
 			<true/>

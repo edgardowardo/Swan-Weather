@@ -58,11 +58,11 @@ class CityViewModel {
         return ""
     }
     
-    func refreshCity() {
+    func refreshCity(withCallBack : (()->Void)? = nil ) {
         var current : City? = nil
         if let first = realm.objects(City).filter("id == \(self.cityid)").first {
             current = first
-        }        
+        }
         
         // Current data is not stale. That is  it's less than half an hour, show this data.
         if let c = current, lastupdate = c.lastupdate where NSDate().timeIntervalSinceDate(lastupdate) / 3600 < 0.5 {
@@ -88,6 +88,9 @@ class CityViewModel {
                                     }
                                     self.current.value = c
                                     self.hudDelegate?.hideHud()
+                                    if let callback = withCallBack {
+                                        callback()
+                                    }
                                 }
                         }
                     }
