@@ -13,7 +13,7 @@ import CoreLocation
 
 class CitiesViewController: UITableViewController {
     
-    var disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
     let locationManager = CLLocationManager()
     var cityViewController: CityViewController? = nil
     let searchController = UISearchController(searchResultsController: nil)
@@ -90,16 +90,21 @@ class CitiesViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                var current: City
+                var current: City?
                 if searchController.active && searchController.searchBar.text != "" {
                     current = viewModel.filteredObjects.value[indexPath.section].1[indexPath.row]
                 } else {
                     current = viewModel.currentObjects.value[indexPath.section].1[indexPath.row]
                 }
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CityViewController
-                controller.viewModel = CityViewModel(city: current)
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-                controller.navigationItem.leftItemsSupplementBackButton = true
+                if let controller = (segue.destinationViewController as? UINavigationController)!.topViewController as? CityViewController, id = current?.id, c = current {
+                    controller.viewModel = CityViewModel(cityid: id)
+                    controller.title = c.name
+                    if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+                        controller.viewModel?.hudDelegate = appDelegate
+                    }
+                    controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                    controller.navigationItem.leftItemsSupplementBackButton = true
+                }
             }
         }
     }

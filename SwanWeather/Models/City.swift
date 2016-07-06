@@ -34,13 +34,14 @@ class Weather: Object {
 
 class City: Object {
     dynamic var id = 0
-    dynamic var lastupdate : NSDate? = NSDate()
+    dynamic var lastupdate : NSDate? = nil
     dynamic var name  = ""
     dynamic var dt = 0
     dynamic var main : Main?
     dynamic var coord : Coordinate?
     dynamic var sys : Sys?
     let weather = List<Weather>()
+    var forecasts = List<Forecast>()
     
     override static func primaryKey() -> String? {
         return "id"

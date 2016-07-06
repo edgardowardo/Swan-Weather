@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 class CityViewController: UIViewController {
 
+    let disposeBag = DisposeBag()
     @IBOutlet weak var detailDescriptionLabel: UILabel!
 
     var viewModel : CityViewModel? {
@@ -20,8 +22,8 @@ class CityViewController: UIViewController {
     }
 
     func configureView() {
-        if let vm = viewModel {
-            self.title = vm.city.name
+        if let vm = viewModel, d = self.detailDescriptionLabel {
+            d.text = vm.temperature
         }
     }
 
@@ -29,12 +31,20 @@ class CityViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.configureView()
+        
+        guard let viewModel = self.viewModel else { return }
+        viewModel.refreshCity()
+        viewModel.current
+            .asObservable()
+            .subscribeNext({ (value) in
+                self.configureView()
+            })
+            .addDisposableTo(disposeBag)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 }
 

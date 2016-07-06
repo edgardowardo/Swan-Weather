@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		775D65B81D2D7388003E18A2 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D65B71D2D7388003E18A2 /* Router.swift */; };
+		775D65BA1D2D926C003E18A2 /* HudDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D65B91D2D926C003E18A2 /* HudDelegate.swift */; };
 		77F60F871D2BD02A0004BC48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F60F861D2BD02A0004BC48 /* AppDelegate.swift */; };
 		77F60F8E1D2BD02A0004BC48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77F60F8C1D2BD02A0004BC48 /* Main.storyboard */; };
 		77F60F901D2BD02A0004BC48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77F60F8F1D2BD02A0004BC48 /* Assets.xcassets */; };
@@ -37,6 +39,8 @@
 /* Begin PBXFileReference section */
 		496EE4EF0BA6DB50C4622AA9 /* Pods_SwanWeather.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwanWeather.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		673E18A64EA82BBDF90A5F1E /* Pods-SwanWeather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwanWeather.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwanWeather/Pods-SwanWeather.debug.xcconfig"; sourceTree = "<group>"; };
+		775D65B71D2D7388003E18A2 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		775D65B91D2D926C003E18A2 /* HudDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudDelegate.swift; sourceTree = "<group>"; };
 		77F60F831D2BD02A0004BC48 /* SwanWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwanWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77F60F861D2BD02A0004BC48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77F60F8D1D2BD02A0004BC48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -172,6 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				77F60FC71D2C1D550004BC48 /* SpotService.swift */,
+				775D65B71D2D7388003E18A2 /* Router.swift */,
+				775D65B91D2D926C003E18A2 /* HudDelegate.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -339,6 +345,8 @@
 			files = (
 				77F60FC61D2C1CF90004BC48 /* Forecast.swift in Sources */,
 				77F60F871D2BD02A0004BC48 /* AppDelegate.swift in Sources */,
+				775D65BA1D2D926C003E18A2 /* HudDelegate.swift in Sources */,
+				775D65B81D2D7388003E18A2 /* Router.swift in Sources */,
 				77F60FC11D2C16BB0004BC48 /* Spot.swift in Sources */,
 				77F60FBE1D2C16AF0004BC48 /* CityViewModel.swift in Sources */,
 				77F60FBD1D2C16AF0004BC48 /* CitiesViewModel.swift in Sources */,

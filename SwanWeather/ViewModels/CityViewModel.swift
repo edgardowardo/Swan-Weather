@@ -9,14 +9,61 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import Alamofire
 
 class CityViewModel {
 
     var realm : Realm! = try? Realm()
-    var city : City!
-
-    init(city : City) {
-        self.city = city
+    var disposeBag = DisposeBag()
+    var current: Variable<City?> = Variable(nil)
+    var hudDelegate : HudDelegate?
+    private var cityid : Int
+    
+    init(cityid : Int) {
+        self.cityid = cityid
     }
     
+    var temperature : String {
+        if let temp = current.value?.main?.temp {
+            return "\(Int(temp))°"
+        }
+        return ""
+    }
+    
+    func refreshCity() {
+        var current : City? = nil
+        if let first = realm.objects(City).filter("id == \(self.cityid)").first {
+            current = first
+        }        
+        
+        // Current data is not stale. That is  it's less than half an hour, show this data.
+        if let c = current, lastupdate = c.lastupdate where NSDate().timeIntervalSinceDate(lastupdate) / 3600 < 0.5 {
+            self.current.value = c
+        } else {
+            self.hudDelegate?.showHud(text: "Searching...")
+            Alamofire
+                .request(Router.Search(id: self.cityid))
+                .responseJSON { response in
+                    if let json = response.result.value as? [String : AnyObject] {
+                        let c = City(value: json)
+                        Alamofire
+                            .request(Router.Forecast(id: self.cityid))
+                            .responseJSON { response in
+                                if let json = response.result.value as? [String : AnyObject] {
+                                    let f = Forecasts(value: json)
+                                    autoreleasepool {
+                                        try! self.realm.write {
+                                            c.lastupdate = NSDate()
+                                            c.forecasts = f.list
+                                            self.realm.add(c, update: true)
+                                        }
+                                    }
+                                    self.current.value = c
+                                    self.hudDelegate?.hideHud()
+                                }
+                        }
+                    }
+            }
+        }
+    }
 }

@@ -58,7 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     @objc private func methodOfReceivedNotification_didLoadCityData(notification : NSNotification) {
         self.hideHud()
     }
-    
+}
+
+extension AppDelegate : HudDelegate {
     func showHud(text text : String) {
         guard let view = self.window?.rootViewController?.view else { return }
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
