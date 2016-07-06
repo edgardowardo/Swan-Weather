@@ -96,12 +96,12 @@ class CitiesViewController: UITableViewController {
                 } else {
                     current = viewModel.currentObjects.value[indexPath.section].1[indexPath.row]
                 }
-                if let controller = (segue.destinationViewController as? UINavigationController)!.topViewController as? CityViewController, id = current?.id, c = current {
+                if let controller = (segue.destinationViewController as? UINavigationController)!.topViewController as? CityViewController, id = current?.id {
                     controller.viewModel = CityViewModel(cityid: id)
-                    controller.title = c.name
                     if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
                         controller.viewModel?.hudDelegate = appDelegate
                     }
+                    controller.title = "Swan Weather"
                     controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                     controller.navigationItem.leftItemsSupplementBackButton = true
                 }

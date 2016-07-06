@@ -12,7 +12,12 @@ import RxSwift
 class CityViewController: UIViewController {
 
     let disposeBag = DisposeBag()
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
+    
+    @IBOutlet weak var labelCity: UILabel!
+    @IBOutlet weak var labelTemperature: UILabel!
+    @IBOutlet weak var labelCloudy: UILabel!
+    @IBOutlet weak var labelTemperatureMin: UILabel!
+    @IBOutlet weak var imageCloudy: UIImageView!
 
     var viewModel : CityViewModel? {
         didSet {
@@ -22,8 +27,22 @@ class CityViewController: UIViewController {
     }
 
     func configureView() {
-        if let vm = viewModel, d = self.detailDescriptionLabel {
-            d.text = vm.temperature
+        if let vm = viewModel {
+            if let t = self.labelCity {
+                t.text = vm.city
+            }
+            if let t = self.labelTemperature {
+                t.text = vm.temperature
+            }
+            if let t = self.labelCloudy {
+                t.text = vm.clouds
+            }
+            if let t = self.labelTemperatureMin {
+                t.text = vm.temperatureMin
+            }
+            if let t = self.imageCloudy {
+                t.image = UIImage(named: vm.cloudsIcon)
+            }
         }
     }
 

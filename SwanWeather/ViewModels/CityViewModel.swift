@@ -23,9 +23,37 @@ class CityViewModel {
         self.cityid = cityid
     }
     
+    var city : String {
+        if let t = current.value?.name {
+            return t
+        }
+        return ""
+    }
+    
     var temperature : String {
-        if let temp = current.value?.main?.temp {
-            return "\(Int(temp))°"
+        if let t = current.value?.main?.temp {
+            return "\(Int(t))°"
+        }
+        return ""
+    }
+    
+    var clouds : String {
+        if let t = current.value?.weather.first?.main {
+            return t
+        }
+        return ""
+    }
+    
+    var temperatureMin : String {
+        if let t = current.value?.main?.temp_min {
+            return "\(Int(t))°"
+        }
+        return ""
+    }
+
+    var cloudsIcon : String {
+        if let t = current.value?.weather.first?.icon {
+            return t
         }
         return ""
     }
