@@ -7,23 +7,72 @@
 //
 
 import UIKit
+import RxSwift
+import RealmSwift
+import CoreLocation
 
 class CitiesViewController: UITableViewController {
-
+    
+    var disposeBag = DisposeBag()
+    let locationManager = CLLocationManager()
     var cityViewController: CityViewController? = nil
-    var objects = [AnyObject]()
-
+    let searchController = UISearchController(searchResultsController: nil)
+    var viewModel = CitiesViewModel()
+    var location : CLLocation? {
+        didSet {
+            viewModel.coordinate = Coordinate()
+            viewModel.coordinate?.lat = location!.coordinate.latitude
+            viewModel.coordinate?.lon = location!.coordinate.longitude
+        }
+    }
+    
+    // MARK: - View lifecycle -
+    
+    deinit {
+        if let superView = searchController.view.superview {
+            superView.removeFromSuperview()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(insertNewObject(_:)))
-        self.navigationItem.rightBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.cityViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CityViewController
         }
+        
+        // Setup the Search Controller
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search with a city name"
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = searchController.searchBar
+        
+        // Ask for current location and populate nearby spots
+        if CLLocationManager.authorizationStatus() == .NotDetermined || CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestWhenInUseAuthorization()
+        }
+        
+        self.viewModel
+            .currentObjects
+            .asObservable()
+            .subscribeNext({ (value) in
+                self.tableView.reloadData()
+            })
+            .addDisposableTo(disposeBag)
+        
+        self.viewModel
+            .filteredObjects
+            .asObservable()
+            .subscribeNext({ (value) in
+                self.tableView.reloadData()
+            })
+            .addDisposableTo(disposeBag)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -36,20 +85,19 @@ class CitiesViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func insertNewObject(sender: AnyObject) {
-        objects.insert(NSDate(), atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-    }
-
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+                var current: City
+                if searchController.active && searchController.searchBar.text != "" {
+                    current = viewModel.filteredObjects.value[indexPath.section].1[indexPath.row]
+                } else {
+                    current = viewModel.currentObjects.value[indexPath.section].1[indexPath.row]
+                }
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CityViewController
-                controller.detailItem = object
+                controller.viewModel = CityViewModel(city: current)
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -59,33 +107,78 @@ class CitiesViewController: UITableViewController {
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        if searchController.active && searchController.searchBar.text != "" {
+            return viewModel.filteredObjects.value.count
+        }
+        return viewModel.currentObjects.value.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+        if searchController.active && searchController.searchBar.text != "" {
+            return viewModel.filteredObjects.value[section].1.count
+        }
+        return viewModel.currentObjects.value[section].1.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
-        let object = objects[indexPath.row] as! NSDate
-        cell.textLabel!.text = object.description
+        let c: City
+        if searchController.active && searchController.searchBar.text != "" {
+            c = viewModel.filteredObjects.value[indexPath.section].1[indexPath.row]
+        } else {
+            c = viewModel.currentObjects.value[indexPath.section].1[indexPath.row]
+        }
+        cell.textLabel!.text = c.name
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            objects.removeAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if searchController.active && searchController.searchBar.text != "" {
+            return viewModel.filteredObjects.value[section].0
         }
+        return viewModel.currentObjects.value[section].0
     }
 }
+
+// MARK: - Search Bar Delegate -
+
+extension CitiesViewController: UISearchBarDelegate {    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        guard let searchText = searchBar.text else { return }
+        viewModel.getCurrentObjects(searchText, isFilter: true, isSearch: true)
+    }
+}
+
+// MARK: - Core Location -
+
+extension CitiesViewController : CLLocationManagerDelegate {
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedAlways || status == .AuthorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            self.location = location
+            viewModel.getCurrentObjects()
+            locationManager.stopUpdatingLocation()
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("Error finding location: \(error.localizedDescription)")
+    }
+}
+
+// MARK: - UISearchResultsUpdating Delegate -
+
+extension CitiesViewController: UISearchResultsUpdating {
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!
+        viewModel.getCurrentObjects(searchText, isFilter: true)
+    }
+}
+
 

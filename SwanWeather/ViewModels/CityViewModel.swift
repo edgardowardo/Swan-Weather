@@ -7,7 +7,16 @@
 //
 
 import Foundation
+import RealmSwift
+import RxSwift
 
-struct CityViewModel {
+class CityViewModel {
 
+    var realm : Realm! = try? Realm()
+    var city : City!
+
+    init(city : City) {
+        self.city = city
+    }
+    
 }
