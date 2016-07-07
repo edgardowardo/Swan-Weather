@@ -2,7 +2,7 @@
 
 To the reviewer, if you decide this code is not good enough, could you please give a constructive feedback so I can learn something and won't be a dumb programmer forever? I don't need a comprehensive list; just a small key information for me to improve upon, rather than just sayin no. Thank you. Edgar
 
-WALKTHROUGH
+# Walkthrough
 
 From the brief I chose Open Weather Map api to show a list of nearby locations, and a search facility to locate any spot in the world. It then fetches data to the OWM service to collect the current temperature, icon reference, weather state, and minimum temperature. I intended to display the forecasts but didn’t have enough time.
 
