@@ -69,32 +69,21 @@ class CityViewModel {
             self.current.value = c
         } else {
             self.hudDelegate?.showHud(text: "Searching...")
-            Alamofire
-                .request(Router.Search(id: self.cityid))
-                .responseJSON { response in
-                    if let json = response.result.value as? [String : AnyObject] {
-                        let c = City(value: json)
-                        Alamofire
-                            .request(Router.Forecast(id: self.cityid))
-                            .responseJSON { response in
-                                if let json = response.result.value as? [String : AnyObject] {
-                                    let f = Forecasts(value: json)
-                                    autoreleasepool {
-                                        try! self.realm.write {
-                                            c.lastupdate = NSDate()
-                                            c.forecasts = f.list
-                                            self.realm.add(c, update: true)
-                                        }
-                                    }
-                                    self.current.value = c
-                                    self.hudDelegate?.hideHud()
-                                    if let callback = withCallBack {
-                                        callback()
-                                    }
-                                }
-                        }
+
+            OpenWeatherMapService.fetchCityAndForecast(withId: self.cityid, callback: { (city, forecasts) in
+                autoreleasepool {
+                    try! self.realm.write {
+                        city.lastupdate = NSDate()
+                        city.forecasts = forecasts.list
+                        self.realm.add(city, update: true)
                     }
-            }
+                }
+                self.current.value = city
+                self.hudDelegate?.hideHud()
+                if let callback = withCallBack {
+                    callback()
+                }
+            })
         }
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		22F5598B58B8D5DDB580D472 /* Pods_SwanWeatherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE49F080D2B93B3931EA297 /* Pods_SwanWeatherTests.framework */; };
+		7753B5F71D2E541F00D90ECB /* OpenWeatherMapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753B5F61D2E541F00D90ECB /* OpenWeatherMapService.swift */; };
 		775D65B81D2D7388003E18A2 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D65B71D2D7388003E18A2 /* Router.swift */; };
 		775D65BA1D2D926C003E18A2 /* HudDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D65B91D2D926C003E18A2 /* HudDelegate.swift */; };
 		77F60F871D2BD02A0004BC48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F60F861D2BD02A0004BC48 /* AppDelegate.swift */; };
@@ -41,6 +42,7 @@
 		1AE49F080D2B93B3931EA297 /* Pods_SwanWeatherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwanWeatherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		496EE4EF0BA6DB50C4622AA9 /* Pods_SwanWeather.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwanWeather.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		673E18A64EA82BBDF90A5F1E /* Pods-SwanWeather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwanWeather.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwanWeather/Pods-SwanWeather.debug.xcconfig"; sourceTree = "<group>"; };
+		7753B5F61D2E541F00D90ECB /* OpenWeatherMapService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenWeatherMapService.swift; sourceTree = "<group>"; };
 		775D65B71D2D7388003E18A2 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		775D65B91D2D926C003E18A2 /* HudDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudDelegate.swift; sourceTree = "<group>"; };
 		77F60F831D2BD02A0004BC48 /* SwanWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwanWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,6 +187,7 @@
 				77F60FC71D2C1D550004BC48 /* SpotService.swift */,
 				775D65B71D2D7388003E18A2 /* Router.swift */,
 				775D65B91D2D926C003E18A2 /* HudDelegate.swift */,
+				7753B5F61D2E541F00D90ECB /* OpenWeatherMapService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				77F60FB81D2C16770004BC48 /* CitiesViewController.swift in Sources */,
 				77F60FB91D2C16770004BC48 /* CityViewController.swift in Sources */,
 				77F60FC41D2C1CE70004BC48 /* City.swift in Sources */,
+				7753B5F71D2E541F00D90ECB /* OpenWeatherMapService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

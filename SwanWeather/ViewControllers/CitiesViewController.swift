@@ -46,7 +46,7 @@ class CitiesViewController: UITableViewController {
         // Setup the Search Controller
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Search with a city name"
+        searchController.searchBar.placeholder = viewModel.searchBarPlaceHolder
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
@@ -101,7 +101,7 @@ class CitiesViewController: UITableViewController {
                     if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
                         controller.viewModel?.hudDelegate = appDelegate
                     }
-                    controller.title = "Swan Weather"
+                    controller.title = self.viewModel.title
                     controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                     controller.navigationItem.leftItemsSupplementBackButton = true
                 }

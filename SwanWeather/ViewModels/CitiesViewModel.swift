@@ -17,6 +17,14 @@ class CitiesViewModel {
     var filteredObjects: Variable<[(String, [City])]> = Variable([])
     var coordinate: Coordinate?
     
+    var searchBarPlaceHolder : String {
+        return "Search with a city name"
+    }
+    
+    var title : String {
+        return "Swan Weather"
+    }
+    
     func getCurrentObjects(searchText : String? = nil, isFilter : Bool = false, isSearch : Bool = false) {
         var currents = [(String, [City])]()
         

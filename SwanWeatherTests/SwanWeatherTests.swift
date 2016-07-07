@@ -84,7 +84,7 @@ class SwanWeatherTests: XCTestCase {
         XCTAssertEqual(vm.currentObjects.value.last?.0, "RECENTS - 0")
 
         //
-        // Filter the previous search with "Lon" among those 13
+        // Filter the previous search with "Lon" among those previous 13
         //
         vm.getCurrentObjects("Lon", isFilter: true, isSearch: false)
         XCTAssertEqual(vm.filteredObjects.value.count, 2)
@@ -167,21 +167,27 @@ class SwanWeatherTests: XCTestCase {
         }
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
-}
-
-func backgroundThread(delay: Double = 0.0, background: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-        if(background != nil){ background!(); }
+    func testOpenWeatherMapServiceAsynchronously() {
         
-        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-        dispatch_after(popTime, dispatch_get_main_queue()) {
-            if(completion != nil){ completion!(); }
+        let id = 2643743 // London town!
+        let e = expectationWithDescription("Expect return data from server using the service")
+
+        OpenWeatherMapService.fetchCityAndForecast(withId: id) { (city, forecasts) in
+            XCTAssertEqual(city.name, "London")
+            if let main = city.main {
+                XCTAssertGreaterThan(main.temp, -50)
+                XCTAssertLessThan(main.temp, 60)
+            } else {
+                XCTFail("Expecting temperature data")
+            }
+            XCTAssertGreaterThan(forecasts.list.count, 0)
+            e.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(60) { error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
         }
     }
 }
