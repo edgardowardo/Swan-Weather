@@ -13,12 +13,12 @@ struct SpotService {
 
     struct Notification {
         struct Identifier {
-            static let willLoadCityData = "NotificationIdentifierOf_willLoadCityData"
-            static let didLoadCityData = "NotificationIdentifierOf_didLoadCityData"
+            static let willloadSpotData = "NotificationIdentifierOf_willloadSpotData"
+            static let didloadSpotData = "NotificationIdentifierOf_didloadSpotData"
         }
     }
 
-    static func loadCityData() {
+    static func loadSpotData(withCallBack : ((realm : Realm)->Void)? = nil ) {
         
         dispatch_async(dispatch_queue_create("loadCityOnBackground", nil)) {
             
@@ -27,7 +27,7 @@ struct SpotService {
             if let jsonData = NSData(contentsOfFile: jsonFilePath) {
                 
                 dispatch_sync(dispatch_get_main_queue(), {
-                    NSNotificationCenter.defaultCenter().postNotificationName(Notification.Identifier.willLoadCityData, object: nil)
+                    NSNotificationCenter.defaultCenter().postNotificationName(Notification.Identifier.willloadSpotData, object: nil)
                 })
                 
                 do {
@@ -38,7 +38,7 @@ struct SpotService {
                             
                             try! realm.write({
 
-                                print("\(NSDate()) loadCityData")
+                                print("\(NSDate()) loadSpotData")
                                 
                                 for cityData in jsonArray {
                                     let city = Spot()
@@ -54,8 +54,12 @@ struct SpotService {
                                     
                                     realm.add(city, update: true)
                                 }
-                                print("\(NSDate()) loadedCityData... \(realm.objects(Spot).count) records")
+                                print("\(NSDate()) loadedSpotData... \(realm.objects(Spot).count) records")
                             })
+                            
+                            if let callback = withCallBack {
+                                callback(realm: realm)
+                            }
                         }
                     }
                     
@@ -64,7 +68,7 @@ struct SpotService {
                 }
                 
                 dispatch_sync(dispatch_get_main_queue(), {
-                    NSNotificationCenter.defaultCenter().postNotificationName(Notification.Identifier.didLoadCityData, object: nil)
+                    NSNotificationCenter.defaultCenter().postNotificationName(Notification.Identifier.didloadSpotData, object: nil)
                 })
             }
         }

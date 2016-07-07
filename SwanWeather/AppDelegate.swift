@@ -28,11 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         
         if realm.objects(Spot).count == 0 {
-            SpotService.loadCityData()
+            SpotService.loadSpotData()
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(methodOfReceivedNotification_willLoadCityData), name: SpotService.Notification.Identifier.willLoadCityData, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(methodOfReceivedNotification_didLoadCityData), name: SpotService.Notification.Identifier.didLoadCityData, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(methodOfReceivedNotification_willloadSpotData), name: SpotService.Notification.Identifier.willloadSpotData, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(methodOfReceivedNotification_didloadSpotData), name: SpotService.Notification.Identifier.didloadSpotData, object: nil)
         
         return true
     }
@@ -51,11 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     // MARK: - HUD
     
-    @objc private func methodOfReceivedNotification_willLoadCityData(notification : NSNotification) {
+    @objc private func methodOfReceivedNotification_willloadSpotData(notification : NSNotification) {
         self.showHud(text: "Installing spots")
     }
     
-    @objc private func methodOfReceivedNotification_didLoadCityData(notification : NSNotification) {
+    @objc private func methodOfReceivedNotification_didloadSpotData(notification : NSNotification) {
         self.hideHud()
     }
 }

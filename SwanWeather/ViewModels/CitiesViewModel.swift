@@ -46,7 +46,7 @@ class CitiesViewModel {
         }
     }
 
-    func getNearbies(fromLocation location: Coordinate?, andSearchText searchText : String?) -> [City] {
+    private func getNearbies(fromLocation location: Coordinate?, andSearchText searchText : String?) -> [City] {
         if let loc = location {
             let latitude = loc.lat, longitude = loc.lon
             let searchDistance = 2.0
@@ -65,7 +65,7 @@ class CitiesViewModel {
         return []
     }
     
-    func cityFromSpot(spot : Spot) -> City {
+    private func cityFromSpot(spot : Spot) -> City {
         let c:City = City()
         c.id = spot.id
         c.name = spot.name
